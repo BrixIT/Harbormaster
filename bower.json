@@ -1,0 +1,22 @@
+{
+  "name": "harbormaster",
+  "authors": [
+    "Martijn Braam <martijn@brixit.nl>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "mermaid": "~0.5.5"
+  }
+}

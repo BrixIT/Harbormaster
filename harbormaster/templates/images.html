@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="row">
+
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Labeled images</div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Names</th>
+                        <th>Size</th>
+                    </tr>
+                    {% for image in images %}
+                        {% if '<none>:<none>' not in image.RepoTags %}
+                            <tr>
+                                <td>
+                                    {{ ', '.join(image.RepoTags) }}
+                                </td>
+                                <td>{{ image.VirtualSize }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Image graph</div>
+                <div class="panel-body">
+                    <div class="mermaid">
+                        graph TD
+                        {% for image in images %}
+                            {% if '<none>:<none>' in image.RepoTags %}
+                                {{ image.Id }}({{ image.Id[0:8] }});
+                            {% else %}
+                                {{ image.Id }}("{{ image.RepoTags[0] }}");
+                            {% endif %}
+                            {% if image.ParentId != "" %}
+                                {{ image.ParentId }} --> {{ image.Id }};
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

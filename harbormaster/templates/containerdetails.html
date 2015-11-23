@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="row">
+
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Container info</div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ inspect.Name[1:] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Image</th>
+                        <td>{{ inspect.Config.Image }}</td>
+                    </tr>
+                    <tr>
+                        <th>Command</th>
+                        <td>{{ ' '.join(inspect.Config.Cmd) }}</td>
+                    </tr>
+                    <tr>
+                        <th>TTY</th>
+                        <td>{{ inspect.Config.Tty }}</td>
+                    </tr>
+                    <tr>
+                        <th>Labels</th>
+                        <td>{{ ', '.join(inspect.Config.Labels) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Environment variables</div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for env in inspect.Config.Env %}
+                        <tr>
+                            <td>
+                                {{ env.split('=',2)[0] }}
+                            </td>
+                            <td>
+                                {{ env.split('=',2)[1] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Ports</div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Private</th>
+                        <th>Value</th>
+                    </tr>
+                    {% for private,public in inspect.Config.ExposedPorts.items() %}
+                        <tr>
+                            <td>
+                                {{ private }}
+                            </td>
+                            <td>
+                                notimplemented
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Mounts</div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Container</th>
+                        <th>Host</th>
+                    </tr>
+                    {% for mount in inspect.Mounts %}
+                        <tr>
+                            <td>
+                                {{ mount.Destination }}
+                            </td>
+                            <td>
+                                {{ mount.Source }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}}

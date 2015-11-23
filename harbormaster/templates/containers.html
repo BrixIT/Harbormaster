@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Names</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <th width="150"></th>
+                    </tr>
+                    {% for container in containers %}
+                        <tr>
+                            <td>
+                                {% for name in container.Names %}
+                                    {{ name }}<br>
+                                {% endfor %}
+                            </td>
+                            <td>{{ container.Image }}</td>
+                            <td>{{ container.Status }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="/container/{{ container.Id }}/details" class="btn btn-default btn-sm">Details</a>
+                                    {% if container.up %}
+                                        <a href="/container/{{ container.Id }}/action/stop"
+                                           class="btn btn-danger btn-sm">Stop</a>
+                                    {% else %}
+                                        <a href="/container/{{ container.Id }}/action/start"
+                                           class="btn btn-success btn-sm">Start</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Container</th>
+                        <th>Private port</th>
+                        <th>Type</th>
+                        <th>Public port</th>
+                    </tr>
+                    {% for port in ports %}
+                        <tr>
+                            <td>
+                                <a href="/containers/{{ port.container.Id }}">{{ primary_name[port.container.Names[0]] }}</a>
+                            </td>
+                            <td>{{ port.private }}</td>
+                            <td>{{ port.type }}</td>
+                            <td>{{ port.public }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="mermaid">
+                        graph LR
+                        classDef up fill:#dff0d8,stroke:#333,stroke-width:1px;
+                        classDef down fill:#f2dede,stroke:#333,stroke-width:1px;
+                        host((Docker host))
+                        {% for container in containers %}
+                            {{ container.Id }}({{ primary_name[container.Names[0]] }})
+                        {% endfor %}
+                        {% for port in ports %}
+                            {% if port.public != "" %}
+                                host-- "{{ port.public }} #dash;#gt; {{ port.private }} ({{ port.type }})" -->
+                                {{ port.container.Id }}
+                            {% endif %}
+                        {% endfor %}
+                        {% for link in links %}
+                            {{ link.b }}-. "{{ link.label }}" .->{{ link.a }}
+                        {% endfor %}
+                        {% for container in containers %}
+                            {% if container.up %}
+                                class {{ container.Id }} up
+                            {% else %}
+                                class {{ container.Id }} down
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}}
